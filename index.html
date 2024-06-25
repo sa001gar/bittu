@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Alphabet Generator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        #alphabet-display {
+            font-size: 5rem;
+            margin: 20px 0;
+            color: #333333;
+        }
+
+        #generate-button, #font-size-selector {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #generate-button:hover, #font-size-selector:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Random Alphabet Generator</h1>
+        <div id="alphabet-display">A</div>
+        <button id="generate-button">Generate New Alphabet</button>
+        <select id="font-size-selector">
+            <option value="3rem">Small</option>
+            <option value="5rem" selected>Medium</option>
+            <option value="7rem">Large</option>
+            <option value="10rem">Extra Large</option>
+        </select>
+    </div>
+    <script>
+        document.getElementById('generate-button').addEventListener('click', generateRandomAlphabet);
+        document.getElementById('font-size-selector').addEventListener('change', changeFontSize);
+
+        function generateRandomAlphabet() {
+            const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const randomIndex = Math.floor(Math.random() * alphabets.length);
+            const randomAlphabet = alphabets[randomIndex];
+            document.getElementById('alphabet-display').textContent = randomAlphabet;
+        }
+
+        function changeFontSize() {
+            const selectedSize = document.getElementById('font-size-selector').value;
+            document.getElementById('alphabet-display').style.fontSize = selectedSize;
+        }
+    </script>
+</body>
+</html>
