@@ -76,12 +76,15 @@
         document.getElementById('font-size-selector').addEventListener('change', changeFontSize);
         document.getElementById('speak-button').addEventListener('click', startSpeechRecognition);
 
+        let currentAlphabet = 'A';
+
         function generateRandomAlphabet() {
             const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const randomIndex = Math.floor(Math.random() * alphabets.length);
             const randomAlphabet = alphabets[randomIndex];
             document.getElementById('alphabet-display').textContent = randomAlphabet;
             document.getElementById('reward').style.display = 'none';
+            currentAlphabet = randomAlphabet;
         }
 
         function changeFontSize() {
@@ -90,23 +93,44 @@
         }
 
         function startSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Speech recognition is not supported in this browser. Please use Google Chrome.');
+                return;
+            }
+
             const alphabetDisplay = document.getElementById('alphabet-display').textContent;
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            const recognition = new webkitSpeechRecognition();
             recognition.lang = 'en-US';
-            recognition.start();
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = function() {
+                console.log('Speech recognition service has started');
+            };
+
+            recognition.onspeechend = function() {
+                recognition.stop();
+            };
 
             recognition.onresult = function(event) {
-                const spokenAlphabet = event.results[0][0].transcript.toUpperCase();
+                const spokenAlphabet = event.results[0][0].transcript.trim().toUpperCase();
+                console.log('Spoken Alphabet: ', spokenAlphabet);
                 if (spokenAlphabet === alphabetDisplay) {
                     document.getElementById('reward').style.display = 'block';
                 } else {
-                    alert('Try again!');
+                    alert('Try again! You said: ' + spokenAlphabet);
                 }
             };
 
             recognition.onerror = function(event) {
-                alert('Error occurred in recognition: ' + event.error);
+                if (event.error === 'no-speech') {
+                    alert('No speech detected. Please try again.');
+                } else {
+                    alert('Error occurred in recognition: ' + event.error);
+                }
             };
+
+            recognition.start();
         }
     </script>
 </body>
